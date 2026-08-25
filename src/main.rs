@@ -26,12 +26,10 @@ fn main() -> io::Result<()> {
     let final_path = if cleaned_input.is_empty() {
         PathBuf::from(default_path)
     } else {
-        // Strip quotes if the user dragged and dropped the file into the terminal
         let unquoted = cleaned_input.trim_matches(|c| c == '"' || c == '\'');
         PathBuf::from(unquoted)
     };
 
-    // 4. Verify that the file actually exists
     if !final_path.exists() {
         println!("\n[-] Error: Could not find the file at: {:?}", final_path);
         println!("    Please restart the program and double-check your path input.");
@@ -55,7 +53,6 @@ fn main() -> io::Result<()> {
         if buffer[i..(i + search_pattern.len())] == search_pattern {
             println!("[+] Target sequence found at byte offset: 0x{:X}", i);
             
-            // Overwrite the matching section with our patch bytes
             buffer[i..(i + patch_bytes.len())].copy_from_slice(&patch_bytes);
             found = true;
             break; 
